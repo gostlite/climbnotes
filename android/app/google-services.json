@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "205202750215",
+    "project_id": "climbnotes-1e45f",
+    "storage_bucket": "climbnotes-1e45f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205202750215:android:85b6d62ec0502eff68e3a2",
+        "android_client_info": {
+          "package_name": "com.donotreplyme.climbnotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArIfCe9kM65Am00kl8hUVitK80lMr4Tdk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
