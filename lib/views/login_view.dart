@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import "dart:developer" as devtool show log;
+
+import 'package:flutter/widgets.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -59,18 +62,25 @@ class _LoginViewState extends State<LoginView> {
                     .signInWithEmailAndPassword(
                         email: email, password: password);
 
-                print(userCred);
+                devtool.log(userCred.toString());
+                if (context.mounted) {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil("/notes/", (route) => false);
+                }
               } on FirebaseAuthException catch (e) {
                 if (e.code == "invalid-credential") {
-                  print("Invalid credentials provided");
+                  devtool.log("Invalid credentials provided");
+                  if (context.mounted) {
+                    showSnackBar(context, "wrong credentials");
+                  }
                 } else {
-                  print("something bad happeed");
-                  print(e.code);
+                  devtool.log("something bad happeed");
+                  devtool.log(e.code);
                 }
               } catch (e) {
-                print("something bad happened");
+                devtool.log("something bad happened");
 
-                print(e);
+                devtool.log(e.toString());
               }
             },
             style: ButtonStyle(
@@ -91,4 +101,10 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
   }
+}
+
+ScaffoldFeatureController<Widget, SnackBarClosedReason> showSnackBar(
+    BuildContext context, String content) {
+  return ScaffoldMessenger.of(context)
+      .showSnackBar(SnackBar(content: Text(content)));
 }
