@@ -1,3 +1,4 @@
+import 'package:climbnotes/constants/routes.dart';
 import 'package:climbnotes/firebase_options.dart';
 import 'package:climbnotes/views/login_view.dart';
 import 'package:climbnotes/views/register_view.dart';
@@ -28,10 +29,10 @@ class MyApp extends StatelessWidget {
       ),
       home: const HomePage(),
       routes: {
-        "/register/": (context) => const RegisterView(),
-        "/login/": (context) => const LoginView(),
-        "/verifyEmail/": (context) => const VerifyEmailView(),
-        "/notes/": (context) => const NotesView()
+        registerRoute: (context) => const RegisterView(),
+        loginRoute: (context) => const LoginView(),
+        verifyRoute: (context) => const VerifyEmailView(),
+        noteRoute: (context) => const NotesView()
       },
     );
   }
@@ -102,7 +103,7 @@ class _NotesViewState extends State<NotesView> {
                       await FirebaseAuth.instance.signOut();
                       if (context.mounted) {
                         Navigator.pushNamedAndRemoveUntil(
-                            context, "/login/", (_) => false);
+                            context, loginRoute, (_) => false);
                       }
                     }
                     devtools.log(shouldLogout.toString());
