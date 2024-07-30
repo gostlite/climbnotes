@@ -73,11 +73,16 @@ class _LoginViewState extends State<LoginView> {
                     showSnackBar(context, "wrong credentials");
                   }
                 } else {
-                  devtool.log("something bad happeed");
+                  if (context.mounted) {
+                    showSnackBar(context, e.code);
+                  }
                   devtool.log(e.code);
                 }
               } catch (e) {
-                devtool.log("something bad happened");
+                // devtool.log("something bad happened");
+                if (context.mounted) {
+                  showSnackBar(context, e.toString());
+                }
 
                 devtool.log(e.toString());
               }

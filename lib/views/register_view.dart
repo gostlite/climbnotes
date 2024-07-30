@@ -1,5 +1,6 @@
 // import 'package:climbnotes/firebase_options.dart';
 import 'package:climbnotes/constants/routes.dart';
+import 'package:climbnotes/views/login_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -59,21 +60,40 @@ class _RegisterViewState extends State<RegisterView> {
               final email = _email.text;
               final password = _password.text;
               try {
-                final userCred = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: email, password: password);
-                devtools.log(userCred.toString());
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: email, password: password);
+                final user = FirebaseAuth.instance.currentUser;
+                await user?.sendEmailVerification();
+                if (context.mounted) {
+                  Navigator.of(context).pushNamed(verifyRoute);
+                }
               } on FirebaseAuthException catch (e) {
                 if (e.code == "email-already-in-use") {
+                  if (context.mounted) {
+                    showSnackBar(context, "This user already exists");
+                  }
+
                   devtools.log("This user already exists");
                 } else if (e.code == "weak-password") {
+                  if (context.mounted) {
+                    showSnackBar(context, "Your password is really weak");
+                  }
                   devtools.log("Your password is really weak");
                 } else if (e.code == "invalid-email") {
+                  if (context.mounted) {
+                    showSnackBar(context, "Invalid email");
+                  }
                   devtools.log("Invalid email");
                 } else {
+                  if (context.mounted) {
+                    showSnackBar(context, e.code);
+                  }
                   devtools.log(e.code);
                 }
               } catch (e) {
+                if (context.mounted) {
+                  showSnackBar(context, "Something bad happened here");
+                }
                 devtools.log("Something bad happened here");
               }
             },
