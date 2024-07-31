@@ -1,5 +1,6 @@
 // import 'package:climbnotes/firebase_options.dart';
 import 'package:climbnotes/constants/routes.dart';
+import 'package:climbnotes/utilities/showerror_dialog.dart';
 import 'package:climbnotes/views/login_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_core/firebase_core.dart';

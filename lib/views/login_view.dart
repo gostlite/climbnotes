@@ -1,4 +1,5 @@
 import 'package:climbnotes/constants/routes.dart';
+import 'package:climbnotes/utilities/showerror_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import "dart:developer" as devtool show log;
@@ -57,18 +58,24 @@ class _LoginViewState extends State<LoginView> {
               final email = _email.text;
               final password = _password.text;
               try {
-                final userCred = await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                        email: email, password: password);
-
-                devtool.log(userCred.toString());
-                if (context.mounted) {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil(noteRoute, (route) => false);
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: email, password: password);
+                final user = FirebaseAuth.instance.currentUser;
+                if (user?.emailVerified ?? false) {
+                  if (context.mounted) {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(noteRoute, (route) => false);
+                  }
+                } else {
+                  if (context.mounted) {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(verifyRoute, (route) => false);
+                  }
                 }
               } on FirebaseAuthException catch (e) {
                 if (e.code == "invalid-credential") {
-                  devtool.log("Invalid credentials provided");
+                  devtool.log(e.code);
+
                   if (context.mounted) {
                     showSnackBar(context, "wrong credentials");
                   }
@@ -105,10 +112,4 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
   }
-}
-
-ScaffoldFeatureController<Widget, SnackBarClosedReason> showSnackBar(
-    BuildContext context, String content) {
-  return ScaffoldMessenger.of(context)
-      .showSnackBar(SnackBar(content: Text(content)));
 }
