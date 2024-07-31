@@ -1,8 +1,10 @@
 import 'package:climbnotes/constants/routes.dart';
+import 'package:climbnotes/services/auth/auth_exceptions.dart';
+import 'package:climbnotes/services/auth/auth_service.dart';
 import 'package:climbnotes/utilities/showerror_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
-import "dart:developer" as devtool show log;
+// import "dart:developer" as devtool show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -58,40 +60,31 @@ class _LoginViewState extends State<LoginView> {
               final email = _email.text;
               final password = _password.text;
               try {
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
-                    email: email, password: password);
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.emailVerified ?? false) {
+                await AuthService.firebase()
+                    .logIn(email: email, password: password);
+                final user = AuthService.firebase().currentUser;
+                if (user?.isEmailVerified ?? false) {
                   if (context.mounted) {
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil(noteRoute, (route) => false);
                   }
                 } else {
                   if (context.mounted) {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil(verifyRoute, (route) => false);
+                    Navigator.of(context).pushNamed(verifyRoute);
                   }
                 }
-              } on FirebaseAuthException catch (e) {
-                if (e.code == "invalid-credential") {
-                  devtool.log(e.code);
-
-                  if (context.mounted) {
-                    showSnackBar(context, "wrong credentials");
-                  }
-                } else {
-                  if (context.mounted) {
-                    showSnackBar(context, e.code);
-                  }
-                  devtool.log(e.code);
-                }
-              } catch (e) {
-                // devtool.log("something bad happened");
+              } on WrongCredentialsException catch (_) {
                 if (context.mounted) {
-                  showSnackBar(context, e.toString());
+                  showSnackBar(context, "Wrong credentials");
                 }
-
-                devtool.log(e.toString());
+              } on UserNotFoundException catch (_) {
+                if (context.mounted) {
+                  showSnackBar(context, "User Not found");
+                }
+              } on GenericAuthException catch (_) {
+                if (context.mounted) {
+                  showSnackBar(context, "Authentication Error");
+                }
               }
             },
             style: ButtonStyle(

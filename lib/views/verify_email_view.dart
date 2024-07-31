@@ -1,7 +1,7 @@
 import 'package:climbnotes/constants/routes.dart';
+import 'package:climbnotes/services/auth/auth_service.dart';
 import 'package:climbnotes/utilities/showerror_dialog.dart';
-import 'package:climbnotes/views/login_view.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 
 class VerifyEmailView extends StatefulWidget {
@@ -26,8 +26,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               "if you've not received a verication email, click the button below"),
           TextButton(
               onPressed: () async {
-                final user = FirebaseAuth.instance.currentUser;
-                await user?.sendEmailVerification();
+                // final user = AuthService.firebase().currentUser;
+                // await user?.;
+                await AuthService.firebase().sendEmailVerification();
                 if (context.mounted) {
                   showSnackBar(context, "go to your email to verify");
                   Navigator.of(context)
@@ -37,7 +38,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               child: const Text("Send Email Verification")),
           TextButton(
               onPressed: () async {
-                await FirebaseAuth.instance.signOut();
+                await AuthService.firebase().logOut();
                 if (context.mounted) {
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil(registerRoute, (route) => true);
