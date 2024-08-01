@@ -1,12 +1,11 @@
 import 'package:climbnotes/constants/routes.dart';
-import 'package:climbnotes/firebase_options.dart';
 import 'package:climbnotes/services/auth/auth_service.dart';
 import 'package:climbnotes/views/login_view.dart';
 import 'package:climbnotes/views/notes_view.dart';
 import 'package:climbnotes/views/register_view.dart';
 import 'package:climbnotes/views/verify_email_view.dart';
 import 'package:flutter/material.dart';
-import "dart:developer" as devtools show log;
+// import "dart:developer" as devtools show log;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
