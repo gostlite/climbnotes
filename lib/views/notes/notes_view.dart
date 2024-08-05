@@ -12,19 +12,18 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
-  late final NoteService _noteService;
+  late final NotesService _notesService;
   String get userEmail => AuthService.firebase().currentUser!.email!;
 
   @override
   void initState() {
-    _noteService = NoteService();
-    // _noteService.open();
+    _notesService = NotesService();
     super.initState();
   }
 
   @override
   void dispose() {
-    _noteService.close();
+    _notesService.close();
     super.dispose();
   }
 
@@ -74,28 +73,31 @@ class _NotesViewState extends State<NotesView> {
         ],
       ),
       body: FutureBuilder(
-        future: _noteService.getOrCreateUser(email: userEmail),
+        future: _notesService.getOrCreateUser(email: userEmail),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               return StreamBuilder(
-                  stream: _noteService.allNotes,
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                      case ConnectionState.active:
-                        return const Text("Waiting for all notes");
+                stream: _notesService.allNotes,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                    case ConnectionState.active:
+                      if (snapshot.hasData) {
+                        final notelist = snapshot.data as List<DatabaseNote>;
+                        print(notelist);
+                        return const Text('Waiting for all notes...');
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                      default:
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                    }
-                  });
-            default:
-              return const Center(
-                child: CircularProgressIndicator(),
+                    default:
+                      return const Center(child: CircularProgressIndicator());
+                  }
+                },
               );
+            default:
+              return const Center(child: CircularProgressIndicator());
           }
         },
       ),
