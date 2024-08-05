@@ -115,7 +115,7 @@ class NoteService {
   }
 
   Future<DatabaseNote> createNote(
-      {required DatabaseUser owner, required note}) async {
+      {required DatabaseUser owner, String? note}) async {
     await _ensureDbIsOpen();
     final db = _getDbOrThrow();
 
@@ -124,6 +124,7 @@ class NoteService {
     if (dbUser != owner) {
       throw CouldNotFindUserException();
     } else {
+      note = note ?? "";
       final noteId = await db.insert(noteTable, {
         userIdColumn: owner.id,
         noteColumn: note,
