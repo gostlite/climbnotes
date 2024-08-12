@@ -2,13 +2,17 @@ import 'package:climbnotes/services/crud/crudnote_service.dart';
 import 'package:climbnotes/utilities/dialogs/delete_dialog.dart';
 import 'package:flutter/material.dart';
 
-typedef DeleteNoteCallback = void Function(DatabaseNote note);
+typedef NoteCallback = void Function(DatabaseNote note);
 
 class NoteListView extends StatelessWidget {
   final List<DatabaseNote> notes;
-  final DeleteNoteCallback onNoteDelete;
+  final NoteCallback onNoteDelete;
+  final NoteCallback onTap;
   const NoteListView(
-      {super.key, required this.notes, required this.onNoteDelete});
+      {super.key,
+      required this.notes,
+      required this.onNoteDelete,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +21,9 @@ class NoteListView extends StatelessWidget {
         itemBuilder: (context, index) {
           final note = notes[index];
           return ListTile(
+            onTap: () => {
+              onTap(note),
+            },
             title: Text(
               note.text,
               maxLines: 1,

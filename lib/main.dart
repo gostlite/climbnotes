@@ -1,7 +1,7 @@
 import 'package:climbnotes/constants/routes.dart';
 import 'package:climbnotes/services/auth/auth_service.dart';
 import 'package:climbnotes/views/login_view.dart';
-import 'package:climbnotes/views/notes/new_note_view.dart';
+import 'package:climbnotes/views/notes/create_update_note_view.dart';
 import 'package:climbnotes/views/notes/notes_view.dart';
 import 'package:climbnotes/views/register_view.dart';
 import 'package:climbnotes/views/verify_email_view.dart';
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         loginRoute: (context) => const LoginView(),
         verifyRoute: (context) => const VerifyEmailView(),
         noteRoute: (context) => const NotesView(),
-        newNoteRoute: (context) => const NewNoteView(),
+        createOrUpdateNoteRoute: (context) => const CreateUpdateNoteView(),
       },
     );
   }
