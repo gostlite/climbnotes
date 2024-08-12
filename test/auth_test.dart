@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:climbnotes/services/auth/auth_exceptions.dart';
 import 'package:climbnotes/services/auth/auth_provider.dart';
 import 'package:climbnotes/services/auth/auth_user.dart';
@@ -82,7 +80,8 @@ class MockAuthProvider implements AuthProvider {
     if (!isInitialized) throw NotInitializedException();
     if (email == "foobar@gmail.com") throw UserNotFoundException();
     if (password == "password123") throw WrongCredentialsException();
-    const user = AuthUser(isEmailVerified: false, email: "email@mail.com");
+    const user =
+        AuthUser(isEmailVerified: false, email: "email@mail.com", id: "my_id");
     _user = user;
     return await Future.value(user);
   }
@@ -100,7 +99,8 @@ class MockAuthProvider implements AuthProvider {
     if (!isInitialized) throw NotInitializedException();
     final user = _user;
     if (user == null) throw UserNotFoundException();
-    const newUser = AuthUser(isEmailVerified: true, email: "foo@mail.com");
+    const newUser =
+        AuthUser(isEmailVerified: true, email: "foo@mail.com", id: "my_id");
     _user = newUser;
   }
 }
