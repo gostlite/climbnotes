@@ -2,6 +2,8 @@ import 'package:climbnotes/constants/routes.dart';
 import 'package:climbnotes/enums/menu_action.dart';
 import 'package:climbnotes/services/auth/auth_service.dart';
 import 'package:climbnotes/services/crud/crudnote_service.dart';
+import 'package:climbnotes/utilities/dialogs/logout_dialog.dart';
+import 'package:climbnotes/views/notes/list_note_view.dart';
 import 'package:flutter/material.dart';
 
 class NotesView extends StatefulWidget {
@@ -85,17 +87,10 @@ class _NotesViewState extends State<NotesView> {
                     case ConnectionState.active:
                       if (snapshot.hasData) {
                         final notelist = snapshot.data as List<DatabaseNote>;
-                        return ListView.builder(
-                            itemCount: notelist.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(
-                                  notelist[index].text,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              );
+                        return NoteListView(
+                            notes: notelist,
+                            onNoteDelete: (note) async {
+                              _notesService.deleteNote(id: note.id);
                             });
                       } else {
                         return const Center(child: CircularProgressIndicator());
@@ -115,27 +110,27 @@ class _NotesViewState extends State<NotesView> {
   }
 }
 
-Future<bool> showLogoutDialog(BuildContext context) {
-  return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Log out"),
-          content: const Text("Do you want to log out"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: const Text("Logout"),
-            )
-          ],
-        );
-      }).then((value) => value ?? false);
-}
+// Future<bool> showsLogoutDialog(BuildContext context) {
+//   return showDialog<bool>(
+//       context: context,
+//       builder: (context) {
+//         return AlertDialog(
+//           title: const Text("Log out"),
+//           content: const Text("Do you want to log out"),
+//           actions: [
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop(false);
+//               },
+//               child: const Text("Cancel"),
+//             ),
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop(true);
+//               },
+//               child: const Text("Logout"),
+//             )
+//           ],
+//         );
+//       }).then((value) => value ?? false);
+// }
